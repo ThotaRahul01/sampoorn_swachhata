@@ -1,0 +1,69 @@
+
+{% include 'base_nav.html' %}
+<div class="container py-4">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat,msg in messages %}
+        <div class="alert alert-{{cat}}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="card">
+    <div class="card-body">
+      <h5>Upload Cleaning Proof (with optional GPS & Plant Watering)</h5>
+      <form method="post" enctype="multipart/form-data" id="uploadForm">
+        <div class="mb-3">
+          <label class="form-label">Vehicle (optional)</label>
+          <select name="vehicle_id" class="form-select">
+            <option value="">-- Select Vehicle --</option>
+            {% for v in vehicles %}
+              <option value="{{ v['id'] }}">{{ v['name'] }} — {{ v['driver'] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nearby Bin (optional)</label>
+          <select name="bin_id" class="form-select">
+            <option value="">-- Select Bin --</option>
+            {% for b in bins %}
+              <option value="{{ b['id'] }}">{{ b['location'] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Caption</label>
+          <input type="text" name="caption" class="form-control" placeholder="e.g., 'Cleaned near main gate'">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Photo</label>
+          <input type="file" name="photo" accept="image/*" class="form-control" required>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" value="on" id="plantsWatered" name="plants_watered">
+          <label class="form-check-label" for="plantsWatered">Plants watered in this area</label>
+        </div>
+        <input type="hidden" name="lat" id="lat">
+        <input type="hidden" name="lon" id="lon">
+        <div class="mb-3">
+          <button type="button" class="btn btn-outline-secondary" id="locBtn">Use Current Location</button>
+          <small class="text-muted ms-2">(optional)</small>
+        </div>
+        <button class="btn btn-success">Upload</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('locBtn').addEventListener('click', function(){
+  if (!navigator.geolocation){ alert('Geolocation not supported'); return; }
+  navigator.geolocation.getCurrentPosition(function(pos){
+    document.getElementById('lat').value = pos.coords.latitude;
+    document.getElementById('lon').value = pos.coords.longitude;
+    alert('Location captured: ' + pos.coords.latitude + ', ' + pos.coords.longitude);
+  }, function(err){ alert('Unable to get location: ' + err.message); });
+});
+</script>
+
+// Delhi polluted areas: Anand Vihar, Mundka, Jahangirpuri, Rohini, Wazirpur, Okhla, Punjabi Bagh, Vivek Vihar, Ashok Vihar, Bawana

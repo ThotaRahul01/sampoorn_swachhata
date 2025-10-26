@@ -1,0 +1,34 @@
+
+{% include 'base_nav.html' %}
+<div class="container py-4">
+  <div class="card">
+    <div class="card-body">
+      <h5>Bins Management</h5>
+      <table class="table">
+        <thead><tr><th>Bin</th><th>Level</th><th>Last Update</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for b in bins %}
+            <tr>
+              <td>{{ b['location'] }}</td>
+              <td><span class="badge bg-{{ 'success' if b['level']=='Empty' else 'warning' if b['level']=='Half' else 'danger' }}">{{ b['level'] }}</span></td>
+              <td>{{ b['last_update'] }}</td>
+              <td>
+                <form method="post" action="/bins/update" class="d-inline">
+                  <input type="hidden" name="bin_id" value="{{ b['id'] }}">
+                  <select name="level" class="form-select d-inline w-auto">
+                    <option value="Empty">Empty</option>
+                    <option value="Half">Half</option>
+                    <option value="Full">Full</option>
+                  </select>
+                  <button class="btn btn-sm btn-primary">Update</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+// Delhi polluted areas: Anand Vihar, Mundka, Jahangirpuri, Rohini, Wazirpur, Okhla, Punjabi Bagh, Vivek Vihar, Ashok Vihar, Bawana

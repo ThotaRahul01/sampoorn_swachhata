@@ -1,0 +1,60 @@
+
+{% include 'base_nav.html' %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Bin Summary</h5>
+          <ul class="list-unstyled">
+            {% for b in bins %}
+              <li class="mb-2"><strong>{{ b['location'] }}</strong> - <span class="badge bg-{{ 'success' if b['level']=='Empty' else 'warning' if b['level']=='Half' else 'danger' }}">{{ b['level'] }}</span></li>
+            {% endfor %}
+          </ul>
+          <hr>
+          <h6>Plant Watering Today</h6>
+          <p class="display-6">{{ watered_count }}</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h6>About</h6>
+          <p>Developed by <strong>Team SAMPOORN SWACHHATA</strong>, <strong>Geethanjali Delhi of Engineering and Technology</strong>, Delhi Area, Delhi.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h5>Recent Cleaning Photos</h5>
+          {% if photos|length == 0 %}
+            <p class="text-muted">No photos uploaded yet.</p>
+          {% else %}
+            <div class="row">
+              {% for p in photos %}
+                <div class="col-md-6 mb-3">
+                  <div class="card shadow-sm">
+                    <img src="/uploads/{{ p['filename'] }}" class="card-img-top" style="height:200px;object-fit:cover">
+                    <div class="card-body p-2">
+                      <p class="mb-1"><strong>{{ p['vehicle_name'] or 'Vehicle' }}</strong> - <small class="text-muted">{{ p['timestamp'] }}</small></p>
+                      <p class="mb-1 small text-muted">{{ p['caption'] }}</p>
+                      {% if p['plants_watered'] %}
+                        <p class="mb-0 small text-success">🌿 Plants Watered</p>
+                      {% endif %}
+                      {% if p['lat'] and p['lon'] %}
+                        <p class="mb-0 small">Location: {{ p['lat'] }}, {{ p['lon'] }}</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="text-center py-3 small text-muted">Developed by Team SAMPOORN SWACHHATA, Geethanjali Delhi of Engineering and Technology, Delhi Area, Delhi.</footer>
+
+// Delhi polluted areas: Anand Vihar, Mundka, Jahangirpuri, Rohini, Wazirpur, Okhla, Punjabi Bagh, Vivek Vihar, Ashok Vihar, Bawana

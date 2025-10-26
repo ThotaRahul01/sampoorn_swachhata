@@ -1,0 +1,53 @@
+
+{% include 'base_nav.html' %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<div class="container py-3">
+  <div id="map" style="height:70vh"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var map = L.map('map').setView([28.6139, 77.2090], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19}).addTo(map);
+
+fetch('/api/markers').then(r=>r.json()).then(data=>{
+  data.bins.forEach(function(b){
+    var color = b.level=='Empty' ? 'green' : b.level=='Half' ? 'orange' : 'red';
+    var marker = L.circleMarker([b.lat, b.lon], {radius:8, color:color}).addTo(map);
+    marker.bindPopup('<b>'+b.location+'</b><br>Level: '+b.level);
+  });
+  data.photos.forEach(function(p){
+    var icon = p.plants_watered==1 ? '🍃' : '📷';
+    var marker = L.marker([p.lat, p.lon]).addTo(map);
+    marker.bindPopup('<img src="/uploads/'+p.filename+'" style="width:180px"><br>'+ (p.caption||'') + '<br>' + (p.plants_watered==1 ? '🌿 Plants Watered' : '') );
+  });
+}).catch(err=>console.error(err));
+</script>
+
+// Delhi polluted areas: Anand Vihar, Mundka, Jahangirpuri, Rohini, Wazirpur, Okhla, Punjabi Bagh, Vivek Vihar, Ashok Vihar, Bawana
+
+
+// Updated Delhi Pollution Hotspots
+L.marker([28.646, 77.315]).addTo(map).bindPopup('Anand Vihar');
+L.marker([28.62, 77.08]).addTo(map).bindPopup('Mundka');
+L.marker([28.725, 77.166]).addTo(map).bindPopup('Jahangirpuri');
+L.marker([28.744, 77.112]).addTo(map).bindPopup('Rohini');
+L.marker([28.693, 77.171]).addTo(map).bindPopup('Wazirpur');
+L.marker([28.671, 77.132]).addTo(map).bindPopup('Punjabi Bagh');
+L.marker([28.798, 77.034]).addTo(map).bindPopup('Bawana');
+L.marker([28.53, 77.278]).addTo(map).bindPopup('Okhla');
+L.marker([28.67, 77.323]).addTo(map).bindPopup('Vivek Vihar');
+L.marker([28.691, 77.166]).addTo(map).bindPopup('Ashok Vihar');
+
+// Delhi–Noida Bin Status Map
+L.circleMarker([28.646, 77.315], {color: 'red'}).addTo(map).bindTooltip('Anand Vihar - Bin Status: Full', {permanent: false, direction: 'top'});
+L.circleMarker([28.62, 77.08], {color: 'yellow'}).addTo(map).bindTooltip('Mundka - Bin Status: Half', {permanent: false, direction: 'top'});
+L.circleMarker([28.725, 77.166], {color: 'green'}).addTo(map).bindTooltip('Jahangirpuri - Bin Status: Empty', {permanent: false, direction: 'top'});
+L.circleMarker([28.744, 77.112], {color: 'red'}).addTo(map).bindTooltip('Rohini - Bin Status: Full', {permanent: false, direction: 'top'});
+L.circleMarker([28.693, 77.171], {color: 'yellow'}).addTo(map).bindTooltip('Wazirpur - Bin Status: Half', {permanent: false, direction: 'top'});
+L.circleMarker([28.671, 77.132], {color: 'green'}).addTo(map).bindTooltip('Punjabi Bagh - Bin Status: Empty', {permanent: false, direction: 'top'});
+L.circleMarker([28.798, 77.034], {color: 'red'}).addTo(map).bindTooltip('Bawana - Bin Status: Full', {permanent: false, direction: 'top'});
+L.circleMarker([28.53, 77.278], {color: 'yellow'}).addTo(map).bindTooltip('Okhla - Bin Status: Half', {permanent: false, direction: 'top'});
+L.circleMarker([28.67, 77.323], {color: 'green'}).addTo(map).bindTooltip('Vivek Vihar - Bin Status: Empty', {permanent: false, direction: 'top'});
+L.circleMarker([28.691, 77.166], {color: 'red'}).addTo(map).bindTooltip('Ashok Vihar - Bin Status: Full', {permanent: false, direction: 'top'});
+L.circleMarker([28.628, 77.366], {color: 'yellow'}).addTo(map).bindTooltip('Sector 62 Noida - Bin Status: Half', {permanent: false, direction: 'top'});
+L.circleMarker([28.57, 77.324], {color: 'red'}).addTo(map).bindTooltip('Sector 18 Noida - Bin Status: Full', {permanent: false, direction: 'top'});
